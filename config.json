@@ -1,0 +1,9 @@
+/* 
+ * Facebook sparse config
+ */
+{
+    "oauth": {
+        "clientID" : "",
+        "clientSecret" : ""
+    }
+}
