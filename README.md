@@ -1,17 +1,19 @@
-bip-pod-facebook
+![Facebook](facebook.png) bip-pod-facebook
 =======
 
-Facebook Pod for Bipio.  
+[Facebook](https://www.facebook.com/) pod for [bipio](https://bip.io).  
 
 ## Installation
 
-From bipio server install directory
+From bipio server root directory
 
     npm install bip-pod-facebook
+    ./tools/pod-install.js -a facebook [-u optional account-wide channel auto install]
 
-Auto install script will register the pod with the bipio server and add sparse
+The pod-install script is a server script which will register the pod with the bipio server and add sparse
 configuration to your NODE_ENV environment config ('default.json', staging or production)
-keyed to 'facebook'.
+keyed to 'facebook', based on the default config in the pod constructor.  It will also move the
+pod icon into the server cdn
 
 Manually restart the bipio server at your convenience.
 
