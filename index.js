@@ -22,7 +22,13 @@ var Pod = require('bip-pod'),
     Facebook = new Pod({
         name : 'facebook',
         description : 'Facebook',
-        authType : 'oauth'
+        authType : 'oauth',
+        config : {
+            "oauth": {
+                "clientID" : "",
+                "clientSecret" : ""
+            }
+        }
     });
 
 
