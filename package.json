@@ -1,6 +1,6 @@
 {
     "name": "bip-pod-facebook",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Facebook Pod for Bipio",
     "keywords": [
     "bip",
@@ -10,10 +10,10 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git://github.com/cloudspark/bip-pod-facebook.git"
+        "url": "git://github.com/bipio-server/bip-pod-facebook.git"
     },
     "bugs": {
-        "url": "http://github.com/cloudspark/bip-pod-facebook/issues"
+        "url": "http://github.com/bipio-server/bip-pod-facebook/issues"
     },
     "licenses": [
     {
@@ -32,6 +32,6 @@
     "engines": {
         "node": ">= 0.10.0"
     },
-    "_id": "bip-pod-facebook@0.0.1",
-    "_from": "bip-pod-facebook@>=0.0.0"
+    "_id": "bip-pod-facebook@0.0.2",
+    "_from": "bip-pod-facebook@>=0.0.1"
 }

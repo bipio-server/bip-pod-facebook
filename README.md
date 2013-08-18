@@ -9,6 +9,12 @@ From bipio server install directory
 
     npm install bip-pod-facebook
 
+Auto install script will register the pod with the bipio server and add sparse
+configuration to your NODE_ENV environment config ('default.json', staging or production)
+keyed to 'facebook'.
+
+Manually restart the bipio server at your convenience.
+
 ## Actions
 
 ### post_timeline_mine

@@ -62,13 +62,6 @@ PostTimelineMine.prototype.getSchema = function() {
 }
 
 /**
- * Returns a string representation for channels configured for this action
- **/
-PostTimelineMine.prototype.repr = function() {
-    return this.description;
-}
-
-/**
  * Invokes (runs) the action.
  *
  */
