@@ -36,6 +36,13 @@ function PostTimelineMine(podConfig) {
     // behaviors
     this.trigger = false; // can be a periodic trigger
     this.singleton = true; // only 1 instance per account
+    this.podConfig = podConfig;
+    FB.options(
+        {
+            'appSecret': podConfig.oauth.clientSecret,
+            'appId' : podConfig.oauth.clientID
+        }
+    );
 }
 
 PostTimelineMine.prototype = {};
@@ -67,19 +74,18 @@ PostTimelineMine.prototype.getSchema = function() {
  */
 PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
     var log = this.$resource.log;
-
     FB.api(
-        '/mine/feed',
+        '/' + sysImports.auth.oauth.profile.username  +'/feed',
         'post',
         {
-            access_token : sysImports.auth.oauth_token,
+            access_token : sysImports.auth.oauth.token,
             message : imports.message
         },
         function (res) {
             var err = false;
             var forwardOk = false;
             if (res.error) {
-                log(res.error, channel, 'error');                
+                log(res.error.message, channel, 'error');                
                 // expired token
                 if (res.error.code == 190 && res.error.error_subcode == 466) {
                     // @todo disable all channels in this pod for this user, and
@@ -90,9 +96,9 @@ PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, conte
             }
 
             var exports = {
-                'id' : res.id,
-                'http_response_code' : res.code
+                'id' : res.id
             }
+
             next(res.error, exports);
         });
 }

@@ -22,12 +22,18 @@ var Pod = require('bip-pod'),
     Facebook = new Pod({
         name : 'facebook',
         description : 'Facebook',
+        description_long : 'Facebook is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.',
         authType : 'oauth',
         passportStrategy : require('passport-facebook').Strategy,
         config : {
             "oauth": {
                 "clientID" : "",
-                "clientSecret" : ""
+                "clientSecret" : "",
+                "scopes" : [
+                    'email',
+                    'user_about_me',
+                    'publish_actions'
+                ]
             }
         }
     });
