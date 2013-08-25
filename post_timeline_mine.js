@@ -72,7 +72,7 @@ PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, conte
         '/mine/feed',
         'post',
         {
-            access_token : sysImports._oauth_token,
+            access_token : sysImports.auth.oauth_token,
             message : imports.message
         },
         function (res) {

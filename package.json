@@ -1,6 +1,6 @@
 {
     "name": "bip-pod-facebook",
-    "version": "0.0.2",
+    "version": "0.0.1",
     "description": "Facebook Pod for Bipio",
     "keywords": [
     "bip",
@@ -31,7 +31,5 @@
     },
     "engines": {
         "node": ">= 0.10.0"
-    },
-    "_id": "bip-pod-facebook@0.0.2",
-    "_from": "bip-pod-facebook@>=0.0.1"
+    }
 }

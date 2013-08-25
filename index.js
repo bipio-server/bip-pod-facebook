@@ -23,6 +23,7 @@ var Pod = require('bip-pod'),
         name : 'facebook',
         description : 'Facebook',
         authType : 'oauth',
+        passportStrategy : require('passport-facebook').Strategy,
         config : {
             "oauth": {
                 "clientID" : "",
