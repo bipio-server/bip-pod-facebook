@@ -32,15 +32,18 @@ var Pod = require('bip-pod'),
                 "scopes" : [
                     'email',
                     'user_about_me',
-                    'publish_actions'
+                    'publish_actions',
+                    'read_stream'
                 ]
             }
-        }
+        },
+        dataSources : [ require('./models/track_feed') ]
     });
 
 
 // attach smtp forwarder
 Facebook.add(require('./post_timeline_mine.js'));
+Facebook.add(require('./get_timeline_mine.js'));
 
 // -----------------------------------------------------------------------------
 module.exports = Facebook;
