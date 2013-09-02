@@ -33,11 +33,11 @@ function GetTimelineMine(podConfig) {
     this.description = 'Retrieve My Timeline';
 
     // long description
-    this.description_long = 'Retrieves the latest messages posted by you to your timeline';
+    this.description_long = 'Retrieves the latest messages posted to your timeline';
 
     // behaviors
     this.trigger = true; // can be a periodic trigger
-    this.singleton = true; // only 1 instance per account
+    this.singleton = false; // only 1 instance per account
     this.podConfig = podConfig;
     FB.options(
         {
@@ -52,6 +52,15 @@ GetTimelineMine.prototype = {};
 GetTimelineMine.prototype.getSchema = function() {
     // https://developers.facebook.com/docs/reference/api/post/
     return {
+        'config' : {
+            properties : {
+                'me_only' : {
+                    type : 'boolean',
+                    'default' : false,
+                    description : 'Retrieve only Posts By Me'
+                }
+            }
+        },
         'exports' : {
             properties : {
                 'id' : {
@@ -132,6 +141,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
         modelName = this.$resource.getDataSourceName('track_feed');
 
     (function(imports, channel, sysImports, next) {
+        
         // get last tracking time
         dao.find(modelName, { owner_id : channel.owner_id, channel_id : channel.id }, function(err, result) {
             if (err) {
@@ -176,13 +186,14 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                         } else {
                             // update tracking
                             dao.updateColumn(modelName, { id : result.id }, { last_update : app.helper.nowUTCSeconds() });
-                            
-                            
+
                             if (res.data.length > 0) {
-                                var exports, r;
+                                var exports, r, justMe = (channel.config.me_only && app.helper.isTrue(channel.config.me_only));
                                 for (var i = 0; i < res.data.length; i++) {
-                                    r = res.data[i];                                    
-                                    if (r.message && r.message !== '' && r.from.id === sysImports.auth.oauth.profile.id) {                                       
+                                    r = res.data[i];
+                                    if ((justMe && r.message && r.message !== '' && r.from.id === sysImports.auth.oauth.profile.id) ||
+                                        !justMe) {
+                                        
                                         exports = {
                                             id : r.id,
                                             message : r.message,
