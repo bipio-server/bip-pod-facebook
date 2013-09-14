@@ -17,13 +17,7 @@ pod icon into the server cdn
 
 Manually restart the bipio server at your convenience.
 
-## Actions
-
-### post_timeline_mine
-
-Any message this Channel receives will get posted to the authenticated users Facebook Timeline.
-
-Singleton, no Config.
+## Documentation
 
 [Bipio Docs](https://bip.io/docs/pods/facebook)
 

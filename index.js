@@ -33,7 +33,8 @@ var Pod = require('bip-pod'),
                     'email',
                     'user_about_me',
                     'publish_actions',
-                    'read_stream'
+                    'read_stream',
+                    'manage_pages'
                 ]
             }
         },
@@ -44,6 +45,7 @@ var Pod = require('bip-pod'),
 // attach smtp forwarder
 Facebook.add(require('./post_timeline_mine.js'));
 Facebook.add(require('./get_timeline_mine.js'));
+Facebook.add(require('./get_page_timeline.js'));
 
 // -----------------------------------------------------------------------------
 module.exports = Facebook;
