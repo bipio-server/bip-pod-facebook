@@ -210,10 +210,17 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                                 }
                             }
                             
+                            /*
+                             * disbled - next&prev do not work where since. It
+                             * pages forever.
+                             *
                             // more results? then call myself
                             if (res.paging && res.paging.next) {
-                                self.invoke({ _url : res.paging.next}, channel, sysImports, contentParts, next);
-                            }                            
+                                self.invoke({
+                                    _url : res.paging.next
+                                    }, channel, sysImports, contentParts, next);
+                            }
+                            */
                         }
                     });
             }

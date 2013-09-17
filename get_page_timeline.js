@@ -96,6 +96,10 @@ GetPageTimeline.prototype.getSchema = function() {
                     type : "string",
                     description: 'Link URL'
                 },
+                'post_link' : {
+                    type : "string",
+                    description: 'Link To Post'
+                },
                 'name' : {
                     type : "string",
                     description: 'Link Name'
@@ -270,6 +274,7 @@ GetPageTimeline.prototype.invoke = function(imports, channel, sysImports, conten
                                             type : r.type,
                                             picture : r.picture || '',
                                             link : r.link || '',
+                                            post_link : 'https://www.facebook.com/' + r.id.replace('_', '/posts/'),
                                             name : r.name || '',
                                             description : r.description || '',
                                             icon : r.icon || '',
@@ -280,12 +285,18 @@ GetPageTimeline.prototype.invoke = function(imports, channel, sysImports, conten
                                 }
                             }
 
+                            
+                            /*
+                             * disbled - next&prev do not work where since. It
+                             * pages forever.
+                             *
                             // more results? then call myself
                             if (res.paging && res.paging.next) {
                                 self.invoke({
                                     _url : res.paging.next
                                     }, channel, sysImports, contentParts, next);
                             }
+                            */
                         }
                     });
             }
