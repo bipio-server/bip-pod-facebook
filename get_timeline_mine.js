@@ -134,7 +134,7 @@ GetTimelineMine.prototype.setup = function(channel, accountInfo, next) {
  * 
  * @todo deprecate - move to pods unless action has teardown override
  */
-GetPageTimeline.prototype.teardown = function(channel, accountInfo, next) {   
+GetTimelineMine.prototype.teardown = function(channel, accountInfo, next) {   
   this.$resource.dao.removeFilter(
     this.$resource.getDataSourceName('track_feed'), 
     {
