@@ -62,6 +62,10 @@ PostTimelineMine.prototype.getSchema = function() {
                 "message" : {
                     type : "string",
                     "description" : "New Timeline Content"
+                },
+                "link" : {
+                    type : "string",
+                    "description" : "URL (Optional)"
                 }
             }
         }
@@ -73,14 +77,20 @@ PostTimelineMine.prototype.getSchema = function() {
  *
  */
 PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
-    var log = this.$resource.log;
+    var log = this.$resource.log,
+      payload = {
+            access_token : sysImports.auth.oauth.token,
+            message : imports.message
+        };
+        
+    if (imports.link && /^http/i.test(imports.link)) {
+      payload.link = imports.link;
+    }
+        
     FB.api(
         '/' + sysImports.auth.oauth.profile.username  +'/feed',
         'post',
-        {
-            access_token : sysImports.auth.oauth.token,
-            message : imports.message
-        },
+        payload,
         function (res) {
             var err = false;
             var forwardOk = false;
