@@ -23,19 +23,19 @@
  */
 var FB = require('fb');
 
-function PostTimelineMine(podConfig) {
+function PostPage(podConfig) {
   // pod name. alphanumeric + underscore only
-  this.name = 'post_timeline_mine';
+  this.name = 'post_page';
 
   // quick description
-  this.description = 'Post To My Timeline';
+  this.description = 'Post To Page';
 
   // long description
-  this.description_long = 'Any message this Channel receives will get posted to your Facebook Timeline';
+  this.description_long = 'Posts a message to a Page that you manage';
 
   // behaviors
   this.trigger = false; // can be a periodic trigger
-  this.singleton = true; // only 1 instance per account
+  this.singleton = false; // only 1 instance per account
   this.podConfig = podConfig;
   FB.options(
   {
@@ -45,15 +45,23 @@ function PostTimelineMine(podConfig) {
   );
 }
 
-PostTimelineMine.prototype = {};
+PostPage.prototype = {};
 
-PostTimelineMine.prototype.getSchema = function() {
+PostPage.prototype.getSchema = function() {
   return {
-    'exports' : {
+    'config' : {
       properties : {
-        'id' : {
+        'page_id' : {
+          type : 'string',
+          description : 'Page ID'
+        }
+      }
+    },
+    "exports" : {
+      properties : {
+        "id" : {
           type : "string",
-          description: 'Wall Post ID'
+          description: "Post ID"
         }
       }
     },
@@ -61,7 +69,7 @@ PostTimelineMine.prototype.getSchema = function() {
       properties : {
         "message" : {
           type : "string",
-          "description" : "New Timeline Content"
+          "description" : "New Post Content"
         },
         "link" : {
           type : "string",
@@ -69,26 +77,23 @@ PostTimelineMine.prototype.getSchema = function() {
         }
       }
     }
-  };
+  }
 }
 
-/**
- * Invokes (runs) the action.
- *
- */
-PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
+PostPage.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
   var log = this.$resource.log,
-  payload = {
-    access_token : sysImports.auth.oauth.token,
-    message : imports.message
-  };
+    payload = {
+      access_token : sysImports.auth.oauth.token,
+      message : imports.message
+    }, f;
 
-  if (imports.link && /^http/i.test(imports.link)) {
-    payload.link = imports.link;
-  }
+  if (channel.config.page_id && imports.message) {   
+    if (imports.link && /^http/i.test(imports.link)) {
+      payload.link = imports.link;
+    }
 
-  FB.api(
-    '/' + sysImports.auth.oauth.profile.username  +'/feed',
+    FB.api(
+    '/' + channel.config.page_id  +'/feed',
     'post',
     payload,
     function (res) {
@@ -111,7 +116,8 @@ PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, conte
 
       next(res.error, exports);
     });
+  }
 }
 
 // -----------------------------------------------------------------------------
-module.exports = PostTimelineMine;
+module.exports = PostPage;

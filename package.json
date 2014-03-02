@@ -1,6 +1,6 @@
 {
   "name": "bip-pod-facebook",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "Facebook Pod for Bipio",
   "keywords": [
     "bip",
@@ -28,7 +28,8 @@
     "async" : "0.1.18",
     "bip-pod": ">=0.0.1",
     "fb": ">=0.0.9",
-    "passport-facebook": ">=0.1.5"
+    "passport-facebook": ">=0.1.5",
+    "form-data" : ">=0.1.2"
   },
   "engines": {
     "node": ">= 0.10.0"
