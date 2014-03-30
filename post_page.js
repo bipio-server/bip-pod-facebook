@@ -53,7 +53,15 @@ PostPage.prototype.getSchema = function() {
       properties : {
         'page_id' : {
           type : 'string',
-          description : 'Page ID'
+          description : 'Page ID',
+          oneOf : [
+            {
+              '$ref' : '/renderers/my_pages/{id}'
+            }            
+          ],
+          label : {
+            '$ref' : '/renderers/my_pages/{name}'
+          }
         }
       }
     },

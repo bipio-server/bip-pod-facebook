@@ -62,15 +62,16 @@ GetPageTimeline.prototype.getSchema = function() {
         },
         'page_id' : {
           type : 'string',
-          description : 'Page ID'
+          description : 'Page ID',
+          oneOf : [
+            {
+              '$ref' : '/renderers/my_pages/{id}'
+            }            
+          ],
+          label : {
+            '$ref' : '/renderers/my_pages/{name}'
+          }
         }
-      }
-    },
-    'renderers' : {
-      'my_pages' : {
-        description : 'Get My Pages',
-        contentType : DEFS.CONTENTTYPE_JSON,
-        scope : 'pod'
       }
     },
     'exports' : {
@@ -119,57 +120,6 @@ GetPageTimeline.prototype.getSchema = function() {
       }
     }
   };
-}
-
-/**
- *
- */
-GetPageTimeline.prototype.rpc = function(method, sysImports, options, channel, req, res) {
-  var dao = this.$resource.dao, modelName;
-
-  // Remote client is performing a verify action.
-  if (method == 'my_pages') {
-    (function(sysImports, res) {
-      var args = {
-        access_token : sysImports.auth.oauth.token
-      };
-      FB.api(
-        '/me/accounts',
-        'get',
-        args,
-        function (response) {
-          if (response.error) {
-            res.send(response.error);
-          } else {
-            var pageReq = [];
-            for (var i = 0; i < response.data.length; i++) {
-              pageReq.push(
-                function(pageId) {
-                  return function(next) {
-                    return FB.api('/' + pageId, 'get', args, function(result) {
-                      next(false, result);
-                    });
-                  }
-                }(response.data[i].id) // self exec
-                );
-            }
-
-            async.parallel(pageReq, function(results) {
-              var resp;
-              for (var key in arguments) {
-                if (arguments.hasOwnProperty(key) && arguments[key] ) {
-                  resp = arguments[key];
-                }
-              }
-              res.send(resp);
-            });
-          }
-        }
-        );
-    })(sysImports, res);
-  } else {
-    res.send(404);
-  }
 }
 
 GetPageTimeline.prototype.setup = function(channel, accountInfo, next) {

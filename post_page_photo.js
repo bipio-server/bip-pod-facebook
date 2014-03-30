@@ -53,7 +53,15 @@ PostPagePhoto.prototype.getSchema = function() {
       properties : {
         'page_id' : {
           type : 'string',
-          description : 'Page ID'
+          description : 'Page ID',
+          oneOf : [
+            {
+              '$ref' : '/renderers/my_pages/{id}'
+            }            
+          ],
+          label : {
+            '$ref' : '/renderers/my_pages/{name}'
+          }
         }
         /* temporarily disabled. Permission scoping issues
         published : {
@@ -103,7 +111,6 @@ PostPagePhoto.prototype._postPhoto = function(channel, payload, next) {
   'post',
   payload,
   function (res) {
-    console.log(res);
     var err = false;
     var forwardOk = false;
     if (res.error) {
@@ -157,7 +164,7 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
     payload, f, p, requestUrl;
 
   if (channel.config.page_id) {
-    
+
     if (contentParts._files && contentParts._files.length) {
       for (var i = 0; i < contentParts._files.length; i++) {
         f = contentParts._files[i];
@@ -170,8 +177,8 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
 
           requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + payload.access_token;
 
-          if (payload.message) {              
-            requestUrl += '&message=' + payload.message;
+          if (payload.message) {
+            requestUrl += '&message=' + encodeURIComponent(payload.message);
           }
 
           /*
@@ -193,10 +200,10 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
             if (200 === res.statusCode) {
               res.on('data', function(data) {
                 var resp = JSON.parse(data);
-                next(false, resp);
+                next(false, resp, contentParts, f.size);
               });
-              
-              res.on('end', function() {                
+
+              res.on('end', function() {
               })
             } else {
               next(res.headers['www-authenticate']);
@@ -211,7 +218,7 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
         }
       }
     }
-    
+
     if (imports.url) {
       payload = this._getPayload(imports, channel, sysImports);
       payload.url = imports.url;
