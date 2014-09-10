@@ -5,8 +5,8 @@
  *  Posts a message to users facebook wall
  * ---------------------------------------------------------------
  *
- * @author Michael Pearson <michael@cloudspark.com.au>
- * Copyright (c) 2010-2014 CloudSpark pty ltd http://www.cloudspark.com.au
+ * @author Michael Pearson <michael@bip.io>
+ * Copyright (c) 2010-2014 Michael Pearson michael@bip.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ function PostTimelineMine(podConfig) {
   this.name = 'post_timeline_mine';
 
   // quick description
-  this.description = 'Post To My Timeline';
+  this.title = 'Post To My Timeline';
 
   // long description
-  this.description_long = 'Any message this Channel receives will get posted to your Facebook Timeline';
+  this.description = 'Any message this Channel receives will get posted to your Facebook Timeline';
 
   // behaviors
   this.trigger = false; // can be a periodic trigger

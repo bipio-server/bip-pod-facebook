@@ -5,8 +5,8 @@
  *  Gets a users facebook page
  * ---------------------------------------------------------------
  *
- * @author Michael Pearson <michael@cloudspark.com.au>
- * Copyright (c) 2010-2014 CloudSpark pty ltd http://www.cloudspark.com.au
+ * @author Michael Pearson <michael@bip.io>
+ * Copyright (c) 2010-2014 Michael Pearson michael@bip.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,10 +31,10 @@ function GetPageTimeline(podConfig) {
   this.name = 'get_page_timeline';
 
   // quick description
-  this.description = 'Retrieve A Page Timeline';
+  this.title = 'Retrieve A Page Timeline';
 
   // long description
-  this.description_long = 'Retrieves the latest messages posted to one of your pages';
+  this.description = 'Retrieves the latest messages posted to one of your pages';
 
   // behaviors
   this.trigger = true; // can be a periodic trigger
@@ -66,7 +66,7 @@ GetPageTimeline.prototype.getSchema = function() {
           oneOf : [
             {
               '$ref' : '/renderers/my_pages/{id}'
-            }            
+            }
           ],
           label : {
             '$ref' : '/renderers/my_pages/{name}'

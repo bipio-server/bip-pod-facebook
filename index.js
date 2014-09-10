@@ -24,8 +24,8 @@ var Pod = require('bip-pod'),
     async       = require('async'),
     Facebook = new Pod({
         name : 'facebook',
-        description : 'Facebook',
-        description_long : '<a href="https://www.facebook.com">Facebook</a> is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.',
+        title : 'Facebook',
+        description : '<a href="https://www.facebook.com">Facebook</a> is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.',
         authType : 'oauth',
         passportStrategy : require('passport-facebook').Strategy,
         config : {

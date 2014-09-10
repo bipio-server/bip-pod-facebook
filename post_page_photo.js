@@ -2,8 +2,8 @@
  *
  * The Bipio Facebook Pod
  *
- * @author Michael Pearson <michael@cloudspark.com.au>
- * Copyright (c) 2010-2014 CloudSpark pty ltd http://www.cloudspark.com.au
+ * @author Michael Pearson <michael@bip.io>
+ * Copyright (c) 2010-2014 Michael Pearson michael@bip.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ function PostPagePhoto(podConfig) {
   this.name = 'post_page_photo';
 
   // quick description
-  this.description = 'Post Photo To Page';
+  this.title = 'Post Photo To Page';
 
   // long description
-  this.description_long = 'Posts a Photo to a Page that you manage.  Any image files it receives will also be uploaded';
+  this.description = 'Posts a Photo to a Page that you manage.  Any image files it receives will also be uploaded';
 
   // behaviors
   this.trigger = false; // can be a periodic trigger
@@ -57,13 +57,13 @@ PostPagePhoto.prototype.getSchema = function() {
           oneOf : [
             {
               '$ref' : '/renderers/my_pages/{id}'
-            }            
+            }
           ],
           label : {
             '$ref' : '/renderers/my_pages/{name}'
           }
         }
-        /* temporarily disabled. Permission scoping issues
+        /* disabled. Permission scoping issues
         published : {
           type : 'boolean',
           description : 'Auto Publish',
@@ -74,7 +74,8 @@ PostPagePhoto.prototype.getSchema = function() {
           description : 'Publish Time',
           "default" : 0
         }*/
-      }
+      },
+      "required" : [ "page_id" ]
     },
     "exports" : {
       properties : {

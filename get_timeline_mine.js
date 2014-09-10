@@ -5,8 +5,8 @@
  *  Gets a users facebook timeline
  * ---------------------------------------------------------------
  *
- * @author Michael Pearson <michael@cloudspark.com.au>
- * Copyright (c) 2010-2014 CloudSpark pty ltd http://www.cloudspark.com.au
+ * @author Michael Pearson <michael@bip.io>
+ * Copyright (c) 2010-2014 Michael Pearson michael@bip.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,10 +30,10 @@ function GetTimelineMine(podConfig) {
     this.name = 'get_timeline_mine';
 
     // quick description
-    this.description = 'Retrieve My Timeline';
+    this.title = 'Retrieve My Timeline';
 
     // long description
-    this.description_long = 'Retrieves the latest messages posted to your timeline';
+    this.description = 'Retrieves the latest messages posted to your timeline';
 
     // behaviors
     this.trigger = true; // can be a periodic trigger
@@ -70,11 +70,11 @@ GetTimelineMine.prototype.getSchema = function() {
                 'message' : {
                     type : "string",
                     description: 'Message'
-                },   
+                },
                 'type' : {
                     type : "string",
                     description: 'Post type'
-                },   
+                },
                 'picture' : {
                     type : "string",
                     description: 'Picture URL'
@@ -99,7 +99,7 @@ GetTimelineMine.prototype.getSchema = function() {
                 'created_time' : {
                     type : "string",
                     description: 'UTC Created Time'
-                }                
+                }
             }
         }
     };
@@ -131,15 +131,15 @@ GetTimelineMine.prototype.setup = function(channel, accountInfo, next) {
 
 /**
  * Drop timeline tracker
- * 
+ *
  * @todo deprecate - move to pods unless action has teardown override
  */
-GetTimelineMine.prototype.teardown = function(channel, accountInfo, next) {   
+GetTimelineMine.prototype.teardown = function(channel, accountInfo, next) {
   this.$resource.dao.removeFilter(
-    this.$resource.getDataSourceName('track_feed'), 
+    this.$resource.getDataSourceName('track_feed'),
     {
       owner_id : channel.owner_id,
-      channel_id : channel.id      
+      channel_id : channel.id
     },
     next
   );
@@ -157,7 +157,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
         modelName = this.$resource.getDataSourceName('track_feed');
 
     (function(imports, channel, sysImports, next) {
-        
+
         // get last tracking time
         dao.find(modelName, { owner_id : channel.owner_id, channel_id : channel.id }, function(err, result) {
             if (err) {
@@ -167,13 +167,13 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                 var args = {
                     access_token : sysImports.auth.oauth.token
                 }
-                
+
                 if (imports._url) {
                     var urlTokens = url.parse(imports._url, true);
                     if (urlTokens.query.until) {
                        args.until = urlTokens.query.until;
                     }
-                    
+
                     if (!args.until) {
                         log('Could not follow next URL', channel, 'error');
                         return;
@@ -209,7 +209,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                                     r = res.data[i];
                                     if ((justMe && r.message && r.message !== '' && r.from.id === sysImports.auth.oauth.profile.id) ||
                                         !justMe) {
-                                        
+
                                         exports = {
                                             id : r.id,
                                             message : r.message,
@@ -225,7 +225,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                                     }
                                 }
                             }
-                            
+
                             /*
                              * disbled - next&prev do not work where since. It
                              * pages forever.

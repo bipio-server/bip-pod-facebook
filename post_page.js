@@ -5,8 +5,8 @@
  *  Posts a message to users facebook wall
  * ---------------------------------------------------------------
  *
- * @author Michael Pearson <michael@cloudspark.com.au>
- * Copyright (c) 2010-2014 CloudSpark pty ltd http://www.cloudspark.com.au
+ * @author Michael Pearson <michael@bip.io>
+ * Copyright (c) 2010-2014 Michael Pearson michael@bip.io
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,10 +28,10 @@ function PostPage(podConfig) {
   this.name = 'post_page';
 
   // quick description
-  this.description = 'Post To Page';
+  this.title = 'Post To Page';
 
   // long description
-  this.description_long = 'Posts a message to a Page that you manage';
+  this.description = 'Posts a message to a Page that you manage';
 
   // behaviors
   this.trigger = false; // can be a periodic trigger
@@ -57,13 +57,14 @@ PostPage.prototype.getSchema = function() {
           oneOf : [
             {
               '$ref' : '/renderers/my_pages/{id}'
-            }            
+            }
           ],
           label : {
             '$ref' : '/renderers/my_pages/{name}'
           }
         }
-      }
+      },
+      required : [ 'page_id' ]
     },
     "exports" : {
       properties : {
@@ -83,7 +84,8 @@ PostPage.prototype.getSchema = function() {
           type : "string",
           "description" : "URL (Optional)"
         }
-      }
+      },
+      required : [ 'message' ]
     }
   }
 }
@@ -95,7 +97,7 @@ PostPage.prototype.invoke = function(imports, channel, sysImports, contentParts,
       message : imports.message
     }, f;
 
-  if (channel.config.page_id && imports.message) {   
+  if (channel.config.page_id && imports.message) {
     if (imports.link && /^http/i.test(imports.link)) {
       payload.link = imports.link;
     }
