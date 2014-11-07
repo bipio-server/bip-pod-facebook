@@ -164,17 +164,17 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
     moment = this.$resource.moment,
     payload, f, p, requestUrl;
 
-  if (channel.config.page_id) {
+  if (contentParts._files && contentParts._files.length) {
+    for (var i = 0; i < contentParts._files.length; i++) {
+      f = contentParts._files[i];
+      // post the first image found
+      if (0 === f.type.indexOf('image')) {
 
-    if (contentParts._files && contentParts._files.length) {
-      for (var i = 0; i < contentParts._files.length; i++) {
-        f = contentParts._files[i];
-        if (0 === f.type.indexOf('image')) {
+        payload = self._getPayload(imports, channel, sysImports);
 
-          payload = self._getPayload(imports, channel, sysImports);
-
+        this.$resource.file.get(f, function(err, fileStruct, stream) {
           var form = new FormData(); //Create multipart form
-          form.append('source', fs.createReadStream(f.localpath)); //Put file
+          form.append('source', stream); //Put file
 
           requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + payload.access_token;
 
@@ -216,16 +216,18 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
           });
 
           form.pipe(request);
-        }
+        });
+        break;
       }
     }
-
+  } else {
     if (imports.url) {
       payload = this._getPayload(imports, channel, sysImports);
       payload.url = imports.url;
       this._postPhoto(channel, payload, next);
     }
   }
+
 }
 
 // -----------------------------------------------------------------------------
