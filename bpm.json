@@ -1,0 +1,356 @@
+{
+  "name": "facebook",
+  "title": "Facebook",
+  "description": "<a href=\"https://www.facebook.com\">Facebook</a> is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.",
+  "url": "",
+  "trackDuplicates": false,
+  "config": {
+    "oauth": {
+      "clientID": "",
+      "clientSecret": "",
+      "scopes": [
+        "email",
+        "user_about_me",
+        "publish_actions",
+        "read_stream",
+        "manage_pages"
+      ]
+    }
+  },
+  "auth": {
+    "strategy": "oauth"
+  },
+  "rpcs": {
+    "my_pages": {
+      "contentType": "application/json",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name"
+        }
+      },
+      "title": "Get My Pages"
+    }
+  },
+  "actions": {
+    "post_timeline_mine": {
+      "title": "Post To My Timeline",
+      "description": "Any message this Channel receives will get posted to your Facebook Timeline",
+      "trigger": "invoke",
+      "config": {
+        "properties": {},
+        "definitions": {}
+      },
+      "exports": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Wall Post ID"
+          }
+        }
+      },
+      "imports": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "New Timeline Content"
+          },
+          "link": {
+            "type": "string",
+            "description": "URL (Optional)"
+          }
+        },
+        "disposition": [
+          "message",
+          "link"
+        ]
+      }
+    },
+    "get_timeline_mine": {
+      "title": "Retrieve My Timeline",
+      "description": "Retrieves the latest messages posted to your timeline",
+      "trigger": "poll",
+      "config": {
+        "properties": {
+          "me_only": {
+            "type": "boolean",
+            "default": false,
+            "description": "Retrieve only Posts By Me"
+          }
+        },
+        "disposition": [
+          "me_only"
+        ]
+      },
+      "exports": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Post ID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message"
+          },
+          "type": {
+            "type": "string",
+            "description": "Post type"
+          },
+          "picture": {
+            "type": "string",
+            "description": "Picture URL"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link URL"
+          },
+          "name": {
+            "type": "string",
+            "description": "Link Name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Link Description"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Link Icon"
+          },
+          "created_time": {
+            "type": "string",
+            "description": "UTC Created Time"
+          }
+        }
+      },
+      "imports": {
+        "properties": {}
+      }
+    },
+    "post_page": {
+      "title": "Post To Page",
+      "description": "Posts a message to a Page that you manage",
+      "trigger": "invoke",
+      "config": {
+        "properties": {
+          "page_id": {
+            "type": "string",
+            "description": "Page ID",
+            "oneOf": [
+              {
+                "$ref": "/renderers/my_pages/{id}"
+              }
+            ],
+            "label": {
+              "$ref": "/renderers/my_pages/{name}"
+            }
+          }
+        },
+        "required": [
+          "page_id"
+        ],
+        "disposition": [
+          "page_id"
+        ]
+      },
+      "exports": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Post ID"
+          }
+        }
+      },
+      "imports": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "New Post Content"
+          },
+          "link": {
+            "type": "string",
+            "description": "URL (Optional)"
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "disposition": [
+          "message",
+          "link"
+        ]
+      }
+    },
+    "post_page_photo": {
+      "title": "Post Photo To Page",
+      "description": "Posts a Photo to a Page that you manage.  Any image files it receives will also be uploaded",
+      "trigger": "invoke",
+      "config": {
+        "properties": {
+          "page_id": {
+            "type": "string",
+            "description": "Page ID",
+            "oneOf": [
+              {
+                "$ref": "/renderers/my_pages/{id}"
+              }
+            ],
+            "label": {
+              "$ref": "/renderers/my_pages/{name}"
+            }
+          }
+        },
+        "required": [
+          "page_id"
+        ],
+        "disposition": [
+          "page_id"
+        ]
+      },
+      "exports": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Photo ID"
+          },
+          "post_id": {
+            "type": "string",
+            "description": "Post ID"
+          }
+        }
+      },
+      "imports": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Photo Description"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL (Optional)"
+          }
+        },
+        "disposition": [
+          "message",
+          "url"
+        ]
+      }
+    },
+    "get_page_timeline": {
+      "title": "Retrieve A Page Timeline",
+      "description": "Retrieves the latest messages posted to one of your pages",
+      "trigger": "poll",
+      "config": {
+        "properties": {
+          "me_only": {
+            "type": "boolean",
+            "default": true,
+            "description": "Retrieve only Posts By Page Admins"
+          },
+          "page_id": {
+            "type": "string",
+            "description": "Page ID",
+            "oneOf": [
+              {
+                "$ref": "/renderers/my_pages/{id}"
+              }
+            ],
+            "label": {
+              "$ref": "/renderers/my_pages/{name}"
+            }
+          }
+        },
+        "disposition": [
+          "me_only",
+          "page_id"
+        ]
+      },
+      "exports": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Post ID"
+          },
+          "message": {
+            "type": "string",
+            "description": "Message"
+          },
+          "type": {
+            "type": "string",
+            "description": "Post type"
+          },
+          "picture": {
+            "type": "string",
+            "description": "Picture URL"
+          },
+          "link": {
+            "type": "string",
+            "description": "Link URL"
+          },
+          "post_link": {
+            "type": "string",
+            "description": "Link To Post"
+          },
+          "name": {
+            "type": "string",
+            "description": "Link Name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Link Description"
+          },
+          "icon": {
+            "type": "string",
+            "description": "Link Icon"
+          },
+          "created_time": {
+            "type": "string",
+            "description": "UTC Created Time"
+          }
+        }
+      },
+      "imports": {
+        "properties": {}
+      }
+    }
+  },
+  "dataSources": {
+    "track_feed": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "renderable": false,
+          "writable": false,
+          "unique": true
+        },
+        "owner_id": {
+          "type": "string",
+          "renderable": false,
+          "writable": false
+        },
+        "created": {
+          "type": "string",
+          "renderable": false,
+          "writable": false
+        },
+        "last_update": {
+          "type": "string",
+          "renderable": false,
+          "writable": false
+        },
+        "channel_id": {
+          "type": "string",
+          "renderable": false,
+          "writable": false
+        }
+      },
+      "keys": [
+        "channel_id",
+        "owner_id"
+      ]
+    }
+  }
+}
