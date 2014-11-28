@@ -20,106 +20,69 @@
  */
 var Pod = require('bip-pod'),
     FB = require('fb'),
-    url = require('url'),
-    async       = require('async'),
-    Facebook = new Pod({
-        name : 'facebook',
-        title : 'Facebook',
-        description : '<a href="https://www.facebook.com">Facebook</a> is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.',
-        authType : 'oauth',
-        passportStrategy : require('passport-facebook').Strategy,
-        config : {
-            "oauth": {
-                "clientID" : "",
-                "clientSecret" : "",
-                "scopes" : [
-                    'email',
-                    'user_about_me',
-                    'publish_actions',
-                    'read_stream',
-                    'manage_pages'
-                ]
-            }
-        },
-        dataSources : [ require('./models/track_feed') ],
-        'renderers' : {
-          'my_pages' : {
-            description : 'Get My Pages',
-            contentType : DEFS.CONTENTTYPE_JSON,
-            properties : {
-              'id' : {
-                type : "string",
-                description: 'ID'
-              },
-              'name' : {
-                type : "string",
-                description: 'Name'
-              }
-            }
-          }
-        },
-    },
-    function() {
-      var config = this.getConfig();
-      FB.options({
-        'appSecret': config.oauth.clientSecret,
-        'appId' : config.oauth.clientID
-      });
-    });
+    crypto = require('crypto'),
+    async   = require('async'),
+    Facebook = new Pod({});
+
+Facebook.initParams = function(sysImports) {
+  var config = this.getConfig(),
+    hmac = crypto.createHmac('sha256', sysImports.auth.oauth.clientSecret || config.oauth.clientSecret);
+
+  hmac.update(sysImports.auth.oauth.token);
+  var params = {};
+
+  params.access_token = sysImports.auth.oauth.token;
+  params.appsecret_proof = hmac.digest('hex');
+
+  return params;
+}
+
+Facebook.getClient = function() {
+  return FB;
+}
 
 Facebook.rpc = function(action, method, sysImports, options, channel, req, res) {
   if (method == 'my_pages') {
-    (function(sysImports, res) {
-      var args = {
-        access_token : sysImports.auth.oauth.token
-      };
-      FB.api(
-        '/me/accounts',
-        'get',
-        args,
-        function (response) {
-          if (response.error) {
-            res.send(response.error);
-          } else {
-            var pageReq = [];
-            for (var i = 0; i < response.data.length; i++) {
-              pageReq.push(
-                function(pageId) {
-                  return function(next) {
-                    return FB.api('/' + pageId, 'get', args, function(result) {
-                      next(false, result);
-                    });
-                  }
-                }(response.data[i].id) // self exec
-                );
-            }
+    var args = initParams(sysImports),
+      client = this.getClient();
 
-            async.parallel(pageReq, function(results) {
-              var resp;
-              for (var key in arguments) {
-                if (arguments.hasOwnProperty(key) && arguments[key] ) {
-                  resp = arguments[key];
+    client.api(
+      '/me/accounts',
+      'get',
+      args,
+      function (response) {
+        if (response.error) {
+          res.send(response.error);
+        } else {
+          var pageReq = [];
+          for (var i = 0; i < response.data.length; i++) {
+            pageReq.push(
+              function(pageId) {
+                return function(next) {
+                  return client.api('/' + pageId, 'get', args, function(result) {
+                    next(false, result);
+                  });
                 }
-              }
-              res.send(resp);
-            });
+              }(response.data[i].id) // self exec
+              );
           }
+
+          async.parallel(pageReq, function(results) {
+            var resp;
+            for (var key in arguments) {
+              if (arguments.hasOwnProperty(key) && arguments[key] ) {
+                resp = arguments[key];
+              }
+            }
+            res.send(resp);
+          });
         }
-        );
-    })(sysImports, res);
+      }
+      );
   } else {
     this.__proto__.rpc.apply(this, arguments);
   }
 }
-
-
-// attach smtp forwarder
-Facebook.add(require('./post_timeline_mine.js'));
-Facebook.add(require('./get_timeline_mine.js'));
-
-Facebook.add(require('./post_page.js'));
-Facebook.add(require('./post_page_photo.js'));
-Facebook.add(require('./get_page_timeline.js'));
 
 // -----------------------------------------------------------------------------
 module.exports = Facebook;

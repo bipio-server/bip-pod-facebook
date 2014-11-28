@@ -1,8 +1,8 @@
 {
   "name": "facebook",
   "title": "Facebook",
-  "description": "<a href=\"https://www.facebook.com\">Facebook</a> is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.",
-  "url": "",
+  "description": "Facebook is a social networking website where users may create a personal profile, add other users as friends, and exchange messages, including automatic notifications when they update their profile.",
+  "url": "https://www.facebook.com",
   "trackDuplicates": false,
   "config": {
     "oauth": {

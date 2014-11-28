@@ -18,99 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-var FB = require('fb'),
-  FormData = require('form-data'),
+var FormData = require('form-data'),
   https = require('https');
   fs = require('fs');
 
-function PostPagePhoto(podConfig) {
-  // pod name. alphanumeric + underscore only
-  this.name = 'post_page_photo';
-
-  // quick description
-  this.title = 'Post Photo To Page';
-
-  // long description
-  this.description = 'Posts a Photo to a Page that you manage.  Any image files it receives will also be uploaded';
-
-  // behaviors
-  this.trigger = false; // can be a periodic trigger
-  this.singleton = false; // only 1 instance per account
-  this.podConfig = podConfig;
-  FB.options(
-  {
-    'appSecret': podConfig.oauth.clientSecret,
-    'appId' : podConfig.oauth.clientID
-  }
-  );
-}
+function PostPagePhoto() {}
 
 PostPagePhoto.prototype = {};
 
-PostPagePhoto.prototype.getSchema = function() {
-  return {
-    'config' : {
-      properties : {
-        'page_id' : {
-          type : 'string',
-          description : 'Page ID',
-          oneOf : [
-            {
-              '$ref' : '/renderers/my_pages/{id}'
-            }
-          ],
-          label : {
-            '$ref' : '/renderers/my_pages/{name}'
-          }
-        }
-        /* disabled. Permission scoping issues
-        published : {
-          type : 'boolean',
-          description : 'Auto Publish',
-          "default" : true
-        },
-        scheduled_publish_time : {
-          type : 'string',
-          description : 'Publish Time',
-          "default" : 0
-        }*/
-      },
-      "required" : [ "page_id" ]
-    },
-    "exports" : {
-      properties : {
-        "id" : {
-          type : "string",
-          description: "Photo ID"
-        },
-        "post_id" : {
-          type : "string",
-          description: "Post ID"
-        }
-      }
-    },
-    "imports": {
-      properties : {
-        "message" : {
-          type : "string",
-          "description" : "Photo Description"
-        },
-        "url" : {
-          type : "string",
-          "description" : "URL (Optional)"
-        }
-      }
-    }
-  }
-}
+PostPagePhoto.prototype._postPhoto = function(channel, params, sysImports, next) {
+  var log = this.$resource.log,
+    client = this.pod.getClient(sysImports);
 
-PostPagePhoto.prototype._postPhoto = function(channel, payload, next) {
-  var log = this.$resource.log;
-
-  FB.api(
+  client.api(
   '/' + channel.config.page_id  +'/photos',
   'post',
-  payload,
+  params,
   function (res) {
     var err = false;
     var forwardOk = false;
@@ -133,27 +56,6 @@ PostPagePhoto.prototype._postPhoto = function(channel, payload, next) {
   });
 }
 
-PostPagePhoto.prototype._getPayload = function(imports, channel, sysImports) {
-  var payload = {
-    access_token : sysImports.auth.oauth.token,
-    message : imports.message,
-    //published : channel.config.published
-  };
-/*
-  if (channel.config.scheduled_publish_time) {
-    var pubTime = Number(channel.config.scheduled_publish_time);
-    if (isNaN(pubTime)) {
-      pubTime = moment(pubTime);
-    }
-    if (pubTime) {
-      payload.scheduled_publish_time = pubTime;
-    }
-  }
-*/
-  return payload;
-}
-
-
 /**
  * Invokes (runs) the action.
  *
@@ -161,8 +63,12 @@ PostPagePhoto.prototype._getPayload = function(imports, channel, sysImports) {
 PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
   var log = this.$resource.log,
     self = this,
+    client = this.pod.getClient(sysImports),
+    params = this.pod.initParams(sysImports),
     moment = this.$resource.moment,
-    payload, f, p, requestUrl;
+    f, p, requestUrl;
+
+  params.message = imports.message;
 
   if (contentParts._files && contentParts._files.length) {
     for (var i = 0; i < contentParts._files.length; i++) {
@@ -170,24 +76,15 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
       // post the first image found
       if (0 === f.type.indexOf('image')) {
 
-        payload = self._getPayload(imports, channel, sysImports);
-
         this.$resource.file.get(f, function(err, fileStruct, stream) {
           var form = new FormData(); //Create multipart form
           form.append('source', stream); //Put file
 
-          requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + payload.access_token;
+          requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + params.access_token;
 
-          if (payload.message) {
-            requestUrl += '&message=' + encodeURIComponent(payload.message);
+          if (params.message) {
+            requestUrl += '&message=' + encodeURIComponent(params.message);
           }
-
-          /*
-          requestUrl += '&published=' + payload.published;
-
-          if (payload.scheduled_publish_time) {
-            requestUrl += '&scheduled_publish_time=' + payload.scheduled_publish_time;
-          }*/
 
           var options = {
               method: 'post',
@@ -222,9 +119,8 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
     }
   } else {
     if (imports.url) {
-      payload = this._getPayload(imports, channel, sysImports);
-      payload.url = imports.url;
-      this._postPhoto(channel, payload, next);
+      params.url = imports.url;
+      this._postPhoto(channel, params, sysImports, next);
     }
   }
 
