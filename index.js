@@ -26,12 +26,14 @@ var Pod = require('bip-pod'),
 
 Facebook.initParams = function(sysImports) {
   var config = this.getConfig(),
-    hmac = crypto.createHmac('sha256', sysImports.auth.oauth.clientSecret || config.oauth.clientSecret);
+    hmac = crypto.createHmac('sha256',
+      sysImports.auth.oauth.clientSecret
+    );
 
-  hmac.update(sysImports.auth.oauth.token);
+  hmac.update(sysImports.auth.oauth.access_token);
   var params = {};
 
-  params.access_token = sysImports.auth.oauth.token;
+  params.access_token = sysImports.auth.oauth.access_token;
   params.appsecret_proof = hmac.digest('hex');
 
   return params;

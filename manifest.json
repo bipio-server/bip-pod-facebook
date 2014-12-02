@@ -18,7 +18,21 @@
     }
   },
   "auth": {
-    "strategy": "oauth"
+    "strategy": "oauth",
+    "properties": {
+      "access_token": {
+        "type": "string",
+        "title": "Access Token"
+      },
+      "clientSecret": {
+        "type": "string",
+        "title": "Client Secret"
+      }
+    },
+    "disposition": [
+      "access_token",
+      "clientSecret"
+    ]
   },
   "rpcs": {
     "my_pages": {
@@ -40,6 +54,7 @@
     "post_timeline_mine": {
       "title": "Post To My Timeline",
       "description": "Any message this Channel receives will get posted to your Facebook Timeline",
+      "doc_ref": "",
       "trigger": "invoke",
       "config": {
         "properties": {},
@@ -73,6 +88,7 @@
     "get_timeline_mine": {
       "title": "Retrieve My Timeline",
       "description": "Retrieves the latest messages posted to your timeline",
+      "doc_ref": "",
       "trigger": "poll",
       "config": {
         "properties": {
@@ -133,6 +149,7 @@
     "post_page": {
       "title": "Post To Page",
       "description": "Posts a message to a Page that you manage",
+      "doc_ref": "",
       "trigger": "invoke",
       "config": {
         "properties": {
@@ -187,6 +204,7 @@
     "post_page_photo": {
       "title": "Post Photo To Page",
       "description": "Posts a Photo to a Page that you manage.  Any image files it receives will also be uploaded",
+      "doc_ref": "",
       "trigger": "invoke",
       "config": {
         "properties": {
@@ -242,6 +260,7 @@
     "get_page_timeline": {
       "title": "Retrieve A Page Timeline",
       "description": "Retrieves the latest messages posted to one of your pages",
+      "doc_ref": "",
       "trigger": "poll",
       "config": {
         "properties": {
