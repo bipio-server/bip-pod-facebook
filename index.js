@@ -45,7 +45,7 @@ Facebook.getClient = function() {
 
 Facebook.rpc = function(action, method, sysImports, options, channel, req, res) {
   if (method == 'my_pages') {
-    var args = initParams(sysImports),
+    var args = this.initParams(sysImports),
       client = this.getClient();
 
     client.api(
