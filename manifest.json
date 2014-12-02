@@ -158,11 +158,11 @@
             "description": "Page ID",
             "oneOf": [
               {
-                "$ref": "/renderers/my_pages/{id}"
+                "$ref": "/rpcs/my_pages/{id}"
               }
             ],
             "label": {
-              "$ref": "/renderers/my_pages/{name}"
+              "$ref": "/rpcs/my_pages/{name}"
             }
           }
         },
@@ -213,11 +213,11 @@
             "description": "Page ID",
             "oneOf": [
               {
-                "$ref": "/renderers/my_pages/{id}"
+                "$ref": "/rpcs/my_pages/{id}"
               }
             ],
             "label": {
-              "$ref": "/renderers/my_pages/{name}"
+              "$ref": "/rpcs/my_pages/{name}"
             }
           }
         },
@@ -274,11 +274,11 @@
             "description": "Page ID",
             "oneOf": [
               {
-                "$ref": "/renderers/my_pages/{id}"
+                "$ref": "/rpcs/my_pages/{id}"
               }
             ],
             "label": {
-              "$ref": "/renderers/my_pages/{name}"
+              "$ref": "/rpcs/my_pages/{name}"
             }
           }
         },
