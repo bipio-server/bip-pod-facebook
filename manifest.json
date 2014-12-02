@@ -27,11 +27,21 @@
       "clientSecret": {
         "type": "string",
         "title": "Client Secret"
+      },
+      "username": {
+        "type": "string",
+        "title": "User Name"
+      },
+      "user_id": {
+        "type": "string",
+        "title": "User ID"
       }
     },
     "disposition": [
       "access_token",
-      "clientSecret"
+      "clientSecret",
+      "username",
+      "user_id"
     ]
   },
   "rpcs": {

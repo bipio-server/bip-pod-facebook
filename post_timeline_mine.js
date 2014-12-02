@@ -44,7 +44,7 @@ PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, conte
 
   try {
     client.api(
-      '/' + JSON.parse(sysImports.auth.oauth.profile).username  +'/feed',
+      '/' + ( sysImports.auth.oauth.username || JSON.parse(sysImports.auth.oauth.profile).username)  +'/feed',
       'post',
       params,
       function (res) {

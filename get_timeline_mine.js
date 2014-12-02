@@ -102,7 +102,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
             }
 
             client.api(
-                '/' + sysImports.auth.oauth.profile.username  +'/feed',
+                '/' + (sysImports.auth.oauth.username || JSON.parse(sysImports.auth.oauth.profile).username)  +'/feed',
                 'get',
                 args,
                 function (res) {
@@ -126,7 +126,14 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                             var exports, r, justMe = (channel.config.me_only && app.helper.isTrue(channel.config.me_only));
                             for (var i = 0; i < res.data.length; i++) {
                                 r = res.data[i];
-                                if ((justMe && r.message && r.message !== '' && r.from.id === sysImports.auth.oauth.profile.id) ||
+                                if (
+                                    (
+                                        justMe
+                                        && r.message
+                                        && r.message !== ''
+                                        && r.from.id === (sysImports.auth.oauth.user_id || JSON.parse(sysImports.auth.oauth.profile).id)
+                                    )
+                                     ||
                                     !justMe) {
 
                                     exports = {
