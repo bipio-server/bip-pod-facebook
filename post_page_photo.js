@@ -77,42 +77,46 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
       if (0 === f.type.indexOf('image')) {
 
         this.$resource.file.get(f, function(err, fileStruct, stream) {
-          var form = new FormData(); //Create multipart form
-          form.append('source', stream); //Put file
+          if (err) {
+            next(err);
+          } else {
+            var form = new FormData(); //Create multipart form
+            form.append('source', stream); //Put file
 
-          requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + params.access_token;
+            requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + params.access_token;
 
-          if (params.message) {
-            requestUrl += '&message=' + encodeURIComponent(params.message);
-          }
-
-          var options = {
-              method: 'post',
-              host: 'graph.facebook.com',
-              path: requestUrl,
-              headers: form.getHeaders()
-          }
-
-          //Do POST request, callback for response
-          var request = https.request(options, function (res){
-            if (200 === res.statusCode) {
-              res.on('data', function(data) {
-                var resp = JSON.parse(data);
-                next(false, resp, contentParts, f.size);
-              });
-
-              res.on('end', function() {
-              })
-            } else {
-              next(res.headers['www-authenticate']);
+            if (params.message) {
+              requestUrl += '&message=' + encodeURIComponent(params.message);
             }
-          });
 
-          request.on('error', function (error) {
-            next(error);
-          });
+            var options = {
+                method: 'post',
+                host: 'graph.facebook.com',
+                path: requestUrl,
+                headers: form.getHeaders()
+            }
 
-          form.pipe(request);
+            //Do POST request, callback for response
+            var request = https.request(options, function (res){
+              if (200 === res.statusCode) {
+                res.on('data', function(data) {
+                  var resp = JSON.parse(data);
+                  next(false, resp, contentParts, f.size);
+                });
+
+                res.on('end', function() {
+                })
+              } else {
+                next(res.headers['www-authenticate']);
+              }
+            });
+
+            request.on('error', function (error) {
+              next(error);
+            });
+
+            form.pipe(request);
+          }
         });
         break;
       }
