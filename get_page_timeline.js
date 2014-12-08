@@ -39,7 +39,7 @@ GetPageTimeline.prototype.setup = function(channel, accountInfo, next) {
   var trackingStruct = {
     owner_id : channel.owner_id,
     channel_id : channel.id,
-    last_update : app.helper.nowUTCSeconds()
+    last_update : $resource.helper.nowUTCSeconds()
   }
   model = dao.modelFactory(modelName, trackingStruct, accountInfo);
   dao.create(model, function(err, result) {
@@ -126,11 +126,11 @@ GetPageTimeline.prototype.invoke = function(imports, channel, sysImports, conten
             dao.updateColumn(modelName, {
               id : result.id
             }, {
-              last_update : app.helper.nowUTCSeconds()
+              last_update : $resource.helper.nowUTCSeconds()
             });
 
             if (res.data.length > 0) {
-              var exports, r, justMe = (channel.config.me_only && app.helper.isTrue(channel.config.me_only));
+              var exports, r, justMe = (channel.config.me_only && $resource.helper.isTruthy(channel.config.me_only));
               for (var i = 0; i < res.data.length; i++) {
                 r = res.data[i];
                 if ((justMe && r.message && r.message !== '' && r.from.id === channel.config.page_id) ||
