@@ -28,44 +28,40 @@ function GetTimelineMine() {}
 GetTimelineMine.prototype = {};
 
 GetTimelineMine.prototype.setup = function(channel, accountInfo, next) {
-     var $resource = this.$resource,
-      self = this,
-      dao = $resource.dao,
-      log = $resource.log,
-      modelName = this.$resource.getDataSourceName('track_feed');
+  this.pod.trackingStart(channel, accountInfo, true, next);
+}
 
-
-    // start tracking from now.
-    var trackingStruct = {
-        owner_id : channel.owner_id,
-        channel_id : channel.id,
-        last_update : $resource.helper.nowUTCSeconds()
-    }
-    model = dao.modelFactory(modelName, trackingStruct, accountInfo);
-    dao.create(model, function(err, result) {
-        if (err) {
-            log(err, channel, 'error');
-        }
-        next(err, 'channel', channel); // ok
-    }, accountInfo);
-
-};
-
-/**
- * Drop timeline tracker
- *
- * @todo deprecate - move to pods unless action has teardown override
- */
 GetTimelineMine.prototype.teardown = function(channel, accountInfo, next) {
-  this.$resource.dao.removeFilter(
-    this.$resource.getDataSourceName('track_feed'),
-    {
-      owner_id : channel.owner_id,
-      channel_id : channel.id
-    },
-    next
-  );
-};
+  this.pod.trackingRemove(channel, accountInfo, next);
+}
+
+GetTimelineMine.prototype.trigger = function(imports, channel, sysImports, contentParts, next) {
+  var pod = this.pod,
+    self = this;
+
+  pod.trackingGet(channel, function(err, since) {
+    if (err) {
+      next(err);
+    } else {
+      pod.trackingUpdate(channel, function(err, until) {
+        if (err) {
+          next(err);
+        } else {
+          imports.since = since;
+          imports.until = until;
+
+          self.invoke(imports, channel, sysImports, contentParts, function(err, post) {
+            if (err) {
+              next(err);
+            } else {
+              next(false, post);
+            }
+          });
+        }
+      });
+    }
+  });
+}
 
 /**
  * Invokes (runs) the action.
@@ -74,99 +70,69 @@ GetTimelineMine.prototype.teardown = function(channel, accountInfo, next) {
 GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
     var $resource = this.$resource,
       self = this,
-      dao = $resource.dao,
-      log = $resource.log,
-      client = this.pod.getClient(sysImports),
-      modelName = this.$resource.getDataSourceName('track_feed');
+      client = this.pod.getClient(sysImports);
 
-        // get last tracking time
-    dao.find(modelName, { owner_id : channel.owner_id, channel_id : channel.id }, function(err, result) {
-        if (err) {
-            log(err, channel, 'error');
-            next(err, {});
-        } else {
-            var args = self.pod.initParams(sysImports);
+    // get last tracking time
+    var args = self.pod.initParams(sysImports);
 
-            if (imports._url) {
-                var urlTokens = url.parse(imports._url, true);
-                if (urlTokens.query.until) {
-                   args.until = urlTokens.query.until;
-                }
+    if (imports.since) {
+        args.since = imports.since;
+    }
 
-                if (!args.until) {
-                    log('Could not follow next URL', channel, 'error');
-                    return;
+    if (imports.until) {
+        args.until = imports.until;
+    }
+
+    client.api(
+        '/' + (sysImports.auth.oauth.username || JSON.parse(sysImports.auth.oauth.profile).username)  +'/feed',
+        'get',
+        args,
+        function (res) {
+            var exports = {};
+            var err = false;
+            var forwardOk = false;
+            if (res.error) {
+                next(res.error, exports);
+                // expired token
+                if (res.error.code == 190 && res.error.error_subcode == 466) {
+                    // @todo disable all channels in this pod for this user, and
+                    // generate a system notice for the user that their channels
+                    // have been disabled
+                    next(res.error.message);
                 }
             } else {
-                args.since =  Math.floor(result.last_update / 1000);
-            }
+                if (res.data.length > 0) {
+                    var exports, r, justMe = (channel.config.me_only && $resource.helper.isTruthy(channel.config.me_only));
+                    for (var i = 0; i < res.data.length; i++) {
+                        r = res.data[i];
+                        if (
+                            (
+                                justMe
+                                && r.message
+                                && r.message !== ''
+                                && r.from.id === (sysImports.auth.oauth.user_id || JSON.parse(sysImports.auth.oauth.profile).id)
+                            )
+                             ||
+                            !justMe) {
 
-            client.api(
-                '/' + (sysImports.auth.oauth.username || JSON.parse(sysImports.auth.oauth.profile).username)  +'/feed',
-                'get',
-                args,
-                function (res) {
-                    var exports = {};
-                    var err = false;
-                    var forwardOk = false;
-                    if (res.error) {
-                        log(res.error.message, channel, 'error');
-                        next(res.error, exports);
-                        // expired token
-                        if (res.error.code == 190 && res.error.error_subcode == 466) {
-                            // @todo disable all channels in this pod for this user, and
-                            // generate a system notice for the user that their channels
-                            // have been disabled
-                        }
-                    } else {
-                        // update tracking
-                        dao.updateColumn(modelName, { id : result.id }, { last_update : $resource.helper.nowUTCSeconds() });
-
-                        if (res.data.length > 0) {
-                            var exports, r, justMe = (channel.config.me_only && $resource.helper.isTruthy(channel.config.me_only));
-                            for (var i = 0; i < res.data.length; i++) {
-                                r = res.data[i];
-                                if (
-                                    (
-                                        justMe
-                                        && r.message
-                                        && r.message !== ''
-                                        && r.from.id === (sysImports.auth.oauth.user_id || JSON.parse(sysImports.auth.oauth.profile).id)
-                                    )
-                                     ||
-                                    !justMe) {
-
-                                    exports = {
-                                        id : r.id,
-                                        message : r.message,
-                                        type : r.type,
-                                        picture : r.picture || '',
-                                        link : r.link || '',
-                                        name : r.name || '',
-                                        description : r.description || '',
-                                        icon : r.icon || '',
-                                        created_time : r.created_time || ''
-                                    }
-                                    next(false, exports );
-                                }
+                            exports = {
+                                id : r.id,
+                                message : r.message,
+                                type : r.type,
+                                picture : r.picture || '',
+                                link : r.link || '',
+                                name : r.name || '',
+                                description : r.description || '',
+                                icon : r.icon || '',
+                                created_time : r.created_time || ''
                             }
+                            next(false, exports );
                         }
-
-                        /*
-                         * disbled - next&prev do not work where since. It
-                         * pages forever.
-                         *
-                        // more results? then call myself
-                        if (res.paging && res.paging.next) {
-                            self.invoke({
-                                _url : res.paging.next
-                                }, channel, sysImports, contentParts, next);
-                        }
-                        */
                     }
-                });
-        }
-    });
+                }
+            }
+        });
+
 }
 
 // -----------------------------------------------------------------------------
