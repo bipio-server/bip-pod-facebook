@@ -154,16 +154,19 @@
       },
       "imports": {
         "properties": {
-          "since" : {
-            "type" : "number",
-            "descsription" : "Since Time (Unix Timestamp)"
+          "since": {
+            "type": "number",
+            "descsription": "Since Time (Unix Timestamp)"
           },
-          "until" : {
-            "type" : "number",
-            "descsription" : "Until Time (Unix Timestamp)"
+          "until": {
+            "type": "number",
+            "descsription": "Until Time (Unix Timestamp)"
           }
         },
-        "disposition" : [ "since", "until" ]
+        "disposition": [
+          "since",
+          "until"
+        ]
       }
     },
     "post_page": {
@@ -353,16 +356,19 @@
       },
       "imports": {
         "properties": {
-          "since" : {
-            "type" : "number",
-            "descsription" : "Since Time (Unix Timestamp)"
+          "since": {
+            "type": "number",
+            "descsription": "Since Time (Unix Timestamp)"
           },
-          "until" : {
-            "type" : "number",
-            "descsription" : "Until Time (Unix Timestamp)"
+          "until": {
+            "type": "number",
+            "descsription": "Until Time (Unix Timestamp)"
           }
         },
-        "disposition" : [ "since", "until" ]
+        "disposition": [
+          "since",
+          "until"
+        ]
       }
     }
   },
@@ -401,5 +407,9 @@
         "owner_id"
       ]
     }
-  }
+  },
+  "tags": [
+    "social",
+    "messaging"
+  ]
 }
