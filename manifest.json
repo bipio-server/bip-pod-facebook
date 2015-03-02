@@ -63,7 +63,7 @@
   "actions": {
     "post_timeline_mine": {
       "title": "Post To My Timeline",
-      "description": "Any message this Channel receives will get posted to your Facebook Timeline",
+      "description": "Posts A New Message To Your Timeline",
       "doc_ref": "",
       "trigger": "invoke",
       "config": {
@@ -96,8 +96,8 @@
       }
     },
     "get_timeline_mine": {
-      "title": "Retrieve My Timeline",
-      "description": "Retrieves the latest messages posted to your timeline",
+      "title": "When Your Timeline Is Posted To",
+      "description": "Triggers When Your Timeline Is Updated",
       "doc_ref": "",
       "trigger": "poll",
       "config": {
@@ -170,8 +170,8 @@
       }
     },
     "post_page": {
-      "title": "Post To Page",
-      "description": "Posts a message to a Page that you manage",
+      "title": "Post To A Page",
+      "description": "Posts A Message To A Page That You Manage",
       "doc_ref": "",
       "trigger": "invoke",
       "config": {
@@ -281,8 +281,8 @@
       }
     },
     "get_page_timeline": {
-      "title": "Retrieve A Page Timeline",
-      "description": "Retrieves the latest messages posted to one of your pages",
+      "title": "When Your Page Is Posted To",
+      "description": "Triggers When One Of Your Pages Is Posted To",
       "doc_ref": "",
       "trigger": "poll",
       "config": {
