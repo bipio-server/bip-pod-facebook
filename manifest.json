@@ -74,7 +74,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Wall Post ID"
+            "title": "Wall Post ID"
           }
         }
       },
@@ -82,11 +82,11 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "New Timeline Content"
+            "title": "New Timeline Content"
           },
           "link": {
             "type": "string",
-            "description": "URL (Optional)"
+            "title": "URL (Optional)"
           }
         },
         "disposition": [
@@ -105,7 +105,7 @@
           "me_only": {
             "type": "boolean",
             "default": false,
-            "description": "Retrieve only Posts By Me"
+            "title": "Retrieve only Posts By Me"
           }
         },
         "disposition": [
@@ -116,39 +116,39 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Post ID"
+            "title": "Post ID"
           },
           "message": {
             "type": "string",
-            "description": "Message"
+            "title": "Message"
           },
           "type": {
             "type": "string",
-            "description": "Post type"
+            "title": "Post type"
           },
           "picture": {
             "type": "string",
-            "description": "Picture URL"
+            "title": "Picture URL"
           },
           "link": {
             "type": "string",
-            "description": "Link URL"
+            "title": "Link URL"
           },
           "name": {
             "type": "string",
-            "description": "Link Name"
+            "title": "Link Name"
           },
           "description": {
             "type": "string",
-            "description": "Link Description"
+            "title": "Link Description"
           },
           "icon": {
             "type": "string",
-            "description": "Link Icon"
+            "title": "Link Icon"
           },
           "created_time": {
             "type": "string",
-            "description": "UTC Created Time"
+            "title": "UTC Created Time"
           }
         }
       },
@@ -178,7 +178,6 @@
         "properties": {
           "page_id": {
             "type": "string",
-            "description": "Page ID",
             "oneOf": [
               {
                 "$ref": "/rpcs/my_pages/{id}"
@@ -186,7 +185,8 @@
             ],
             "label": {
               "$ref": "/rpcs/my_pages/{name}"
-            }
+            },
+            "title": "Page ID"
           }
         },
         "required": [
@@ -200,7 +200,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Post ID"
+            "title": "Post ID"
           }
         }
       },
@@ -208,11 +208,11 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "New Post Content"
+            "title": "New Post Content"
           },
           "link": {
             "type": "string",
-            "description": "URL (Optional)"
+            "title": "URL (Optional)"
           }
         },
         "required": [
@@ -233,7 +233,6 @@
         "properties": {
           "page_id": {
             "type": "string",
-            "description": "Page ID",
             "oneOf": [
               {
                 "$ref": "/rpcs/my_pages/{id}"
@@ -241,7 +240,8 @@
             ],
             "label": {
               "$ref": "/rpcs/my_pages/{name}"
-            }
+            },
+            "title": "Page ID"
           }
         },
         "required": [
@@ -255,11 +255,11 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Photo ID"
+            "title": "Photo ID"
           },
           "post_id": {
             "type": "string",
-            "description": "Post ID"
+            "title": "Post ID"
           }
         }
       },
@@ -267,11 +267,11 @@
         "properties": {
           "message": {
             "type": "string",
-            "description": "Photo Description"
+            "title": "Photo Description"
           },
           "url": {
             "type": "string",
-            "description": "URL (Optional)"
+            "title": "URL (Optional)"
           }
         },
         "disposition": [
@@ -290,11 +290,10 @@
           "me_only": {
             "type": "boolean",
             "default": true,
-            "description": "Retrieve only Posts By Page Admins"
+            "title": "Retrieve only Posts By Page Admins"
           },
           "page_id": {
             "type": "string",
-            "description": "Page ID",
             "oneOf": [
               {
                 "$ref": "/rpcs/my_pages/{id}"
@@ -302,7 +301,8 @@
             ],
             "label": {
               "$ref": "/rpcs/my_pages/{name}"
-            }
+            },
+            "title": "Page ID"
           }
         },
         "disposition": [
@@ -314,43 +314,43 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "Post ID"
+            "title": "Post ID"
           },
           "message": {
             "type": "string",
-            "description": "Message"
+            "title": "Message"
           },
           "type": {
             "type": "string",
-            "description": "Post type"
+            "title": "Post type"
           },
           "picture": {
             "type": "string",
-            "description": "Picture URL"
+            "title": "Picture URL"
           },
           "link": {
             "type": "string",
-            "description": "Link URL"
+            "title": "Link URL"
           },
           "post_link": {
             "type": "string",
-            "description": "Link To Post"
+            "title": "Link To Post"
           },
           "name": {
             "type": "string",
-            "description": "Link Name"
+            "title": "Link Name"
           },
           "description": {
             "type": "string",
-            "description": "Link Description"
+            "title": "Link Description"
           },
           "icon": {
             "type": "string",
-            "description": "Link Icon"
+            "title": "Link Icon"
           },
           "created_time": {
             "type": "string",
-            "description": "UTC Created Time"
+            "title": "UTC Created Time"
           }
         }
       },
