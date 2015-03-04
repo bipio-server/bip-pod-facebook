@@ -62,8 +62,8 @@
   },
   "actions": {
     "post_timeline_mine": {
-      "title": "Post To My Timeline",
-      "description": "Posts A New Message To Your Timeline",
+      "title": "Post To Your Timeline",
+      "description": "Post A New Message To Your Timeline",
       "doc_ref": "",
       "trigger": "invoke",
       "config": {
@@ -74,7 +74,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "title": "Wall Post ID"
+            "title": "Post ID"
           }
         }
       },
@@ -82,13 +82,16 @@
         "properties": {
           "message": {
             "type": "string",
-            "title": "New Timeline Content"
+            "title": "New Message"
           },
           "link": {
             "type": "string",
-            "title": "URL (Optional)"
+            "title": "URL"
           }
         },
+        "required" : [
+          "message"
+        ],
         "disposition": [
           "message",
           "link"
@@ -105,7 +108,7 @@
           "me_only": {
             "type": "boolean",
             "default": false,
-            "title": "Retrieve only Posts By Me"
+            "title": "My Posts Only"
           }
         },
         "disposition": [
@@ -156,11 +159,11 @@
         "properties": {
           "since": {
             "type": "number",
-            "descsription": "Since Time (Unix Timestamp)"
+            "title": "Since Time"
           },
           "until": {
             "type": "number",
-            "descsription": "Until Time (Unix Timestamp)"
+            "title": "Until Time"
           }
         },
         "disposition": [
@@ -358,11 +361,11 @@
         "properties": {
           "since": {
             "type": "number",
-            "descsription": "Since Time (Unix Timestamp)"
+            "title": "Since Time"
           },
           "until": {
             "type": "number",
-            "descsription": "Until Time (Unix Timestamp)"
+            "title": "Until Time"
           }
         },
         "disposition": [
