@@ -215,7 +215,7 @@
           },
           "link": {
             "type": "string",
-            "title": "URL (Optional)"
+            "title": "URL"
           }
         },
         "required": [
@@ -308,9 +308,12 @@
             "title": "Page ID"
           }
         },
-        "disposition": [
-          "me_only",
+        "required" : [
           "page_id"
+        ],
+        "disposition": [
+          "page_id",
+          "me_only"
         ]
       },
       "exports": {
