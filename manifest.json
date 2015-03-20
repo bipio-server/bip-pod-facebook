@@ -172,6 +172,80 @@
         ]
       }
     },
+    "get_timeline_link": {
+      "title": "When a link Is Posted",
+      "description": "Triggers When Your Timeline Is Updated",
+      "doc_ref": "",
+      "trigger": "poll",
+      "config": {
+        "properties": {
+          "me_only": {
+            "type": "boolean",
+            "default": false,
+            "title": "My Posts Only"
+          }
+        },
+        "disposition": [
+          "me_only"
+        ]
+      },
+      "exports": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Post ID"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Post type"
+          },
+          "picture": {
+            "type": "string",
+            "title": "Picture URL"
+          },
+          "link": {
+            "type": "string",
+            "title": "Link URL"
+          },
+          "name": {
+            "type": "string",
+            "title": "Link Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Link Description"
+          },
+          "icon": {
+            "type": "string",
+            "title": "Link Icon"
+          },
+          "created_time": {
+            "type": "string",
+            "title": "UTC Created Time"
+          }
+        }
+      },
+      "imports": {
+        "properties": {
+          "since": {
+            "type": "number",
+            "title": "Since Time"
+          },
+          "until": {
+            "type": "number",
+            "title": "Until Time"
+          }
+        },
+        "disposition": [
+          "since",
+          "until"
+        ]
+      }
+    },
     "post_page": {
       "title": "Post To A Page",
       "description": "Posts A Message To A Page That You Manage",
