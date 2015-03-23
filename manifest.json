@@ -99,7 +99,7 @@
       }
     },
     "get_post_photo":{
-	  "title": "when you post a photo",
+	  "title": "When you post a photo",
 	  "description": "Triggers When you Post A New Photo To Your Timeline",
 	  "doc_ref": "",
       "trigger": "poll",
@@ -169,8 +169,8 @@
       }
 	},
 	"get_tagged_photo":{
-		  "title": "when you get tagged in a photo",
-		  "description": "Triggers When you got tagged in a New Photo",
+		  "title": "When you get tagged in a photo",
+		  "description": "Triggers When you got tagged in a Photo",
 		  "doc_ref": "",
 	      "trigger": "poll",
 	      "config": {

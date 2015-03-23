@@ -84,11 +84,15 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
     }
 
     
-    client.api('/291709667655955/albums, 'get', args,
+    client.api('/'+JSON.parse(sysImports.auth.oauth.profile).id+'/photos/uploaded', 'get', args,
         function (res) {
 
-        console.log("message:");
-        console.log(res);
+    	   console.log(JSON.parse(sysImports.auth.oauth.profile).id)
+		   console.log(res);
+
+       		console.log("found photo");
+			console.log("from:"+imports.since);
+			console.log("to:"+imports.until);
             var err = false;
             var forwardOk = false;
             if (res.error) {
@@ -101,14 +105,7 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
             } else {
                 if (res.data.length > 0) {
 	                for (var i = 0; i < res.data.length; i++) {
-	                	client.api('/' + res.data[i].id  +'/photos, 'get', args,
-	                	function (_res) {
-	                		for (var j = 0; j < _res.data.length; j++) {
-		                		   console.log("new Photo:");
-		                		   console.log(_res.data[j]);
-		                            next(false, _res.data[j] );
-	                		}
-	                	});
+		                            next(false, res.data[i] );
 	                }
                 }
             }

@@ -74,19 +74,19 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
     // get last tracking time
     var args = self.pod.initParams(sysImports);
 
-    if (imports.since) {
+   /* if (imports.since) {
        args.since = imports.since;
     }
 
     if (imports.until) {
     	args.until = imports.until;
-    }
+    }*/
 
     
-    client.api('/' + JSON.parse(sysImports.auth.oauth.profile).id  +'/albums', 'get', args,
+    client.api('/'+JSON.parse(sysImports.auth.oauth.profile).id+'/photos/tagged', 'get', args,
         function (res) {
-    	console.log("res:");
-    	console.log(res);
+
+
             var err = false;
             var forwardOk = false;
             if (res.error) {
@@ -94,20 +94,24 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
                 // expired token
                 if (res.error.code == 190 && res.error.error_subcode == 466) {
                     next(res.error.message);
+                    consol.log("message:"+res.error.message)
                 }
             } else {
                 if (res.data.length > 0) {
+                	
 	                for (var i = 0; i < res.data.length; i++) {
-	                	client.api('/' + res.data[i].id  +'/photos', 'get', args,
-	                	function (_res) {
-
-	                        consol.log("message:"+_res.data);
-	                		for (var j = 0; j < _res.data.length; j++) {
-		                	   if(_res.data[j].from.id!=JSON.parse(sysImports.auth.oauth.profile).id) {
-		                            next(false, _res.data[j] );
-		                	   }
+	                	for(var j=0;j<res.data[i].tags.data.length;j++){
+	                		if(res.data[i].tags.data[j].id==JSON.parse(sysImports.auth.oauth.profile).id){
+	                			console.log("found tag");
+	                			console.log("from:"+new Date(imports.since*1000));
+	                			console.log("to:"+new Date(imports.until*1000));
+	                			var created_tags = new Date(res.data[i].tags.data[j].created_time).getTime();
+			                	if(created_tags>imports.since*1000 && created_tags < imports.until*1000){
+				                	 console.log(res.data[i]);
+				                            next(false, res.data[i] );
+			                	}		
 	                		}
-	                	});
+	                	}
 	                }
                 }
             }
