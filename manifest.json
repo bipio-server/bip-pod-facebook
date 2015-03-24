@@ -343,29 +343,17 @@
             "type": "string",
             "title": "Post type"
           },
-          "picture": {
+          "status_type": {
             "type": "string",
-            "title": "Picture URL"
-          },
-          "link": {
-            "type": "string",
-            "title": "Link URL"
-          },
-          "name": {
-            "type": "string",
-            "title": "Link Name"
-          },
-          "description": {
-            "type": "string",
-            "title": "Link Description"
-          },
-          "icon": {
-            "type": "string",
-            "title": "Link Icon"
+            "title": "Status Post Type"
           },
           "created_time": {
             "type": "string",
             "title": "UTC Created Time"
+          },
+          "updated_time": {
+            "type": "string",
+            "title": "UTC Updated Time"
           }
         }
       },
