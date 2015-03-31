@@ -98,69 +98,70 @@
         ]
       }
     },
-    "get_post_photo":{
-	  "title": "When You Post A Photo",
-	  "description": "Triggers When you Post A New Photo To Your Timeline",
-	  "doc_ref": "",
-      "trigger": "poll",
-      "config": {
-        "properties": {
-        }
-      },
-      "exports": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Photo ID"
-          },
-          "backdated_time": {
-            "type": "string",
-            "title": "Photo backdated time"
-          },
-          "from": {
-            "type": "string",
-            "title": "Picture URL"
-          },
-          "height": {
-            "type": "number",
-            "title": "Height of this photo"
-          },
-          "link": {
-            "type": "string",
-            "title": "Link to photo"
-          },
-          "name": {
-            "type": "string",
-            "title": "User caption of the photo"
-          },
-          "updated_time": {
-            "type": "string",
-            "title": "Link Icon"
-          },
-          "width": {
-            "type": "number",
-            "title": "Width of this photo"
-          }
-        }
-      },
-      "imports": {
-        "properties": {
-          "since": {
-            "type": "number",
-            "title": "Since Time"
-          },
-          "until": {
-            "type": "number",
-            "title": "Until Time"
+    "get_post_photo": {
+  	  "title": "When You Post A Photo",
+  	  "description": "Triggers When you Post A New Photo To Your Timeline",
+  	  "doc_ref": "",
+        "trigger": "poll",
+        "config": {
+          "properties": {
           }
         },
-        "disposition": [
-          "since",
-          "until"
-        ]
-      }
-	},
-	"get_tagged_photo":{
+        "exports": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Photo ID"
+            },
+            "backdated_time": {
+              "type": "string",
+              "title": "Photo backdated time"
+            },
+            "from": {
+              "type": "string",
+              "title": "Picture URL"
+            },
+            "height": {
+              "type": "number",
+              "title": "Height of this photo"
+            },
+            "link": {
+              "type": "string",
+              "title": "Link to photo"
+            },
+            "name": {
+              "type": "string",
+              "title": "User caption of the photo"
+            },
+            "updated_time": {
+              "type": "string",
+              "title": "Link Icon"
+            },
+            "width": {
+              "type": "number",
+              "title": "Width of this photo"
+            }
+          }
+        },
+        "imports": {
+          "properties": {
+            "since": {
+              "type": "number",
+              "title": "Since Time"
+            },
+            "until": {
+              "type": "number",
+              "title": "Until Time"
+            }
+          },
+          "disposition": [
+            "since",
+            "until"
+          ]
+        }
+	  },
+	  "get_tagged_photo": {
+      "disabled" : true,
 		  "title": "When you get tagged in a photo",
 		  "description": "Triggers When you got tagged in a Photo",
 		  "doc_ref": "",
@@ -305,7 +306,7 @@
       }
     },
     "get_timeline_link": {
-      "title": "When a link Is Posted",
+      "title": "When A Link Is Posted",
       "description": "Triggers When Your Timeline Is Updated",
       "doc_ref": "",
       "trigger": "poll",
