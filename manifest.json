@@ -161,7 +161,6 @@
         }
 	  },
 	  "get_tagged_photo": {
-      "disabled" : true,
 		  "title": "When you get tagged in a photo",
 		  "description": "Triggers When you got tagged in a Photo",
 		  "doc_ref": "",
