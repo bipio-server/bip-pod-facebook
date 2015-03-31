@@ -19,26 +19,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 var url = require('url');
-var lastCheck = new Date();
-var access_token = "CAACEdEose0cBAJjnjcsIdZB7oWgeNlEPCwH16K9ba0lqcNZCMM00Vrh22jxUqvJmKvm6BOFRqjZADFhVZCRqcF7oX6vJyKx1rQA4bQbHZC86jZB1ZCnVmnK0bqUK77XSPvci4546Fq3kxpSXNYnT1rtcn4gwoCfgjtCzwa6CNurTF96HcYKka6NIfmxP7iYqceMCRobXSPkq1aCEyUYqM0a"
+
 function getPostPhoto() {}
 
 getPostPhoto.prototype = {};
 
 getPostPhoto.prototype.setup = function(channel, accountInfo, next) {
-	console.log("call setup");
 	this.pod.trackingStart(channel, accountInfo, true, next);
 }
 
 getPostPhoto.prototype.teardown = function(channel, accountInfo, next) {
-	console.log("call teardown");
 	this.pod.trackingRemove(channel, accountInfo, next);
 }
 
 getPostPhoto.prototype.trigger = function(imports, channel, sysImports, contentParts, next) {
-	console.log("call trigger");
 	  var pod = this.pod,
-	    self = this;
+	  	$resource = this.$resource,
+	    self = this,
+	    dataDir = pod.getDataDir(channel, this.name);
+
 
 	  pod.trackingGet(channel, function(err, since) {
 	    if (err) {
@@ -51,11 +50,25 @@ getPostPhoto.prototype.trigger = function(imports, channel, sysImports, contentP
 	          imports.since = since;
 	          imports.until = until;
 
-	          self.invoke(imports, channel, sysImports, contentParts, function(err, post) {
+	          self.invoke(imports, channel, sysImports, contentParts, function(err, photo) {
 	            if (err) {
 	              next(err);
 	            } else {
-	              next(false, post);
+
+								var fileName = photo.source.match(/\w*\.jpg/).shift(),
+									outFile = dataDir + '/' + fileName;
+
+								$resource._httpStreamToFile(
+									photo.source,
+									outFile,
+									function(err, fileStruct) {
+										if (err) {
+											next(err);
+										} else {
+				              next(false, photo, { _files : [ fileStruct ] }, fileStruct.size);
+										}
+									}
+								);
 	            }
 	          });
 	        }
@@ -68,10 +81,10 @@ getPostPhoto.prototype.trigger = function(imports, channel, sysImports, contentP
  *
  */
 getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
-	console.log("call invoke");
 	  var $resource = this.$resource,
       self = this,
       client = this.pod.getClient(sysImports);
+
     // get last tracking time
     var args = self.pod.initParams(sysImports);
 
@@ -83,16 +96,8 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
     	args.until = imports.until;
     }
 
-    
-    client.api('/'+JSON.parse(sysImports.auth.oauth.profile).id+'/photos/uploaded', 'get', args,
+    client.api('/v2.3/' + JSON.parse(sysImports.auth.oauth.profile).id + '/photos', 'get', args,
         function (res) {
-
-    	   console.log(JSON.parse(sysImports.auth.oauth.profile).id)
-		   console.log(res);
-
-       		console.log("found photo");
-			console.log("from:"+imports.since);
-			console.log("to:"+imports.until);
             var err = false;
             var forwardOk = false;
             if (res.error) {
@@ -100,17 +105,15 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
                 // expired token
                 if (res.error.code == 190 && res.error.error_subcode == 466) {
                     next(res.error.message);
-                    consol.log("message:"+res.error.message)
                 }
             } else {
                 if (res.data.length > 0) {
 	                for (var i = 0; i < res.data.length; i++) {
-		                            next(false, res.data[i] );
+                    next(false, res.data[i] );
 	                }
                 }
             }
         });
-    lastCheck = new Date();
 }
 
 // -----------------------------------------------------------------------------

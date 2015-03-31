@@ -99,21 +99,13 @@
       }
     },
     "get_post_photo":{
-	  "title": "When you post a photo",
+	  "title": "When You Post A Photo",
 	  "description": "Triggers When you Post A New Photo To Your Timeline",
 	  "doc_ref": "",
       "trigger": "poll",
       "config": {
         "properties": {
-          "me_only": {
-            "type": "boolean",
-            "default": false,
-            "title": "My Posts Only"
-          }
-        },
-        "disposition": [
-          "me_only"
-        ]
+        }
       },
       "exports": {
         "properties": {
