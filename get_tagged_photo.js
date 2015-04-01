@@ -19,26 +19,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 var url = require('url');
-var lastCheck = new Date();
 function getPostPhoto() {}
 
 getPostPhoto.prototype = {};
 
 getPostPhoto.prototype.setup = function(channel, accountInfo, next) {
-	console.log("call setup");
 	this.pod.trackingStart(channel, accountInfo, true, next);
 }
 
 getPostPhoto.prototype.teardown = function(channel, accountInfo, next) {
-	console.log("call teardown");
 	this.pod.trackingRemove(channel, accountInfo, next);
 }
 
 getPostPhoto.prototype.trigger = function(imports, channel, sysImports, contentParts, next) {
-	console.log("call trigger");
 	  var pod = this.pod,
+	  $resource = this.$resource,
 	    self = this;
-
+	  dataDir = pod.getDataDir(channel, this.name);
+	  
 	  pod.trackingGet(channel, function(err, since) {
 	    if (err) {
 	      next(err);
@@ -50,11 +48,23 @@ getPostPhoto.prototype.trigger = function(imports, channel, sysImports, contentP
 	          imports.since = since;
 	          imports.until = until;
 
-	          self.invoke(imports, channel, sysImports, contentParts, function(err, post) {
+	          self.invoke(imports, channel, sysImports, contentParts, function(err, photo) {
 	            if (err) {
 	              next(err);
 	            } else {
-	              next(false, post);
+	            	var fileName = photo.source.match(/\w*\.jpg/).shift(),
+					outFile = dataDir + '/' + fileName;
+	            	$resource._httpStreamToFile(
+							photo.source,
+							outFile,
+							function(err, fileStruct) {
+								if (err) {
+									next(err);
+								} else {
+									next(false, photo, { _files : [ fileStruct ] }, fileStruct.size);
+								}
+							}
+						);
 	            }
 	          });
 	        }
@@ -67,23 +77,14 @@ getPostPhoto.prototype.trigger = function(imports, channel, sysImports, contentP
  *
  */
 getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {
-	console.log("call invoke");
 	  var $resource = this.$resource,
       self = this,
       client = this.pod.getClient(sysImports);
     // get last tracking time
     var args = self.pod.initParams(sysImports);
 
-   /* if (imports.since) {
-       args.since = imports.since;
-    }
-
-    if (imports.until) {
-    	args.until = imports.until;
-    }*/
-
     
-    client.api('/'+JSON.parse(sysImports.auth.oauth.profile).id+'/photos/tagged', 'get', args,
+    client.api('/v2.3/' + JSON.parse(sysImports.auth.oauth.profile).id +'/photos/tagged', 'get', args,
         function (res) {
 
 
@@ -98,16 +99,11 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
                 }
             } else {
                 if (res.data.length > 0) {
-                	
 	                for (var i = 0; i < res.data.length; i++) {
 	                	for(var j=0;j<res.data[i].tags.data.length;j++){
 	                		if(res.data[i].tags.data[j].id==JSON.parse(sysImports.auth.oauth.profile).id){
-	                			console.log("found tag");
-	                			console.log("from:"+new Date(imports.since*1000));
-	                			console.log("to:"+new Date(imports.until*1000));
 	                			var created_tags = new Date(res.data[i].tags.data[j].created_time).getTime();
 			                	if(created_tags>imports.since*1000 && created_tags < imports.until*1000){
-				                	 console.log(res.data[i]);
 				                            next(false, res.data[i] );
 			                	}		
 	                		}
@@ -116,7 +112,6 @@ getPostPhoto.prototype.invoke = function(imports, channel, sysImports, contentPa
                 }
             }
         });
-    lastCheck = new Date();
 }
 
 // -----------------------------------------------------------------------------
