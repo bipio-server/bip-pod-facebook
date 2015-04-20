@@ -43,8 +43,7 @@ PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, conte
   }
 
   try {
-    client.api(
-      '/' + ( sysImports.auth.oauth.username || JSON.parse(sysImports.auth.oauth.profile).username)  +'/feed',
+    client.api('/v2.3/' + JSON.parse(sysImports.auth.oauth.profile).id  +'/feed',
       'post',
       params,
       function (res) {
@@ -64,7 +63,7 @@ PostTimelineMine.prototype.invoke = function(imports, channel, sysImports, conte
         var exports = {
           'id' : res.id
         }
-
+        
         next(res.error, exports);
       });
   } catch (e) {
