@@ -84,7 +84,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
     }
 
     client.api(
-        '/' + (sysImports.auth.oauth.username || JSON.parse(sysImports.auth.oauth.profile).username)  +'/feed',
+    	'/v2.3/' + JSON.parse(sysImports.auth.oauth.profile).id  +'/feed',
         'get',
         args,
         function (res) {
