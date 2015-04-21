@@ -84,7 +84,7 @@ GetPageTimeline.prototype.invoke = function(imports, channel, sysImports, conten
   }
 
   client.api(
-    '/' + channel.config.page_id  +'/feed',
+	'/v2.3/' + channel.config.page_id  +'/feed',
     'get',
     args,
     function (res) {
