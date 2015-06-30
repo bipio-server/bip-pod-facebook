@@ -38,7 +38,7 @@ PostPage.prototype.invoke = function(imports, channel, sysImports, contentParts,
   }
 
   client.api(
-  '/' + channel.config.page_id  +'/feed',
+  '/' + imports.page_id  +'/feed',
   'post',
   params,
   function (res) {

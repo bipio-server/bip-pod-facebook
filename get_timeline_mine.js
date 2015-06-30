@@ -102,7 +102,7 @@ GetTimelineMine.prototype.invoke = function(imports, channel, sysImports, conten
                 }
             } else {
                 if (res.data.length > 0) {
-                    var exports, r, justMe = (channel.config.me_only && $resource.helper.isTruthy(channel.config.me_only));
+                    var exports, r, justMe = (imports.me_only && $resource.helper.isTruthy(imports.me_only));
                     for (var i = 0; i < res.data.length; i++) {
                         r = res.data[i];
                         if (
