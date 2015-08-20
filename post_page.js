@@ -23,6 +23,8 @@
  */
 function PostPage() {}
 
+var graph = require('fbgraph');
+
 PostPage.prototype = {};
 
 PostPage.prototype.invoke = function(imports, channel, sysImports, contentParts, next) {

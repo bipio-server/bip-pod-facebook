@@ -11,9 +11,11 @@
       "scopes": [
         "email",
         "user_about_me",
-        "publish_actions",
         "read_stream",
-        "manage_pages"
+        "user_photos",
+        "publish_actions",
+        "manage_pages",
+        "publish_pages"
       ]
     }
   },
