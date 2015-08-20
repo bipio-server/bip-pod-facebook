@@ -163,69 +163,61 @@
         }
 	  },
 	  "get_tagged_photo": {
-		  "title": "When you get tagged in a photo",
-		  "description": "Triggers When you got tagged in a Photo",
+		  "title": "When You Get Tagged In A Photo",
+		  "description": "Triggers When You Got Tagged In A Photo",
 		  "doc_ref": "",
 	      "trigger": "poll",
 	      "config": {
-	        "properties": {
-	          "me_only": {
-	            "type": "boolean",
-	            "default": false,
-	            "title": "My Posts Only"
+	          "properties": {
 	          }
 	        },
-	        "disposition": [
-	          "me_only"
-	        ]
-	      },
-	      "exports": {
-	        "properties": {
-	          "id": {
-	            "type": "string",
-	            "title": "Photo ID"
-	          },
-	          "backdated_time": {
-	            "type": "string",
-	            "title": "Photo backdated time"
-	          },
-	          "from": {
-	            "type": "string",
-	            "title": "Picture URL"
-	          },
-	          "height": {
-	            "type": "number",
-	            "title": "Height of this photo"
-	          },
-	          "link": {
-	            "type": "string",
-	            "title": "Link to photo"
-	          },
-	          "name": {
-	            "type": "string",
-	            "title": "User caption of the photo"
-	          },
-	          "updated_time": {
-	            "type": "string",
-	            "title": "Link Icon"
-	          },
-	          "width": {
-	            "type": "number",
-	            "title": "Width of this photo"
-	          }
-	        }
-	      },
-	      "imports": {
-	        "properties": {
-	          "since": {
-	            "type": "number",
-	            "title": "Since Time"
-	          },
-	          "until": {
-	            "type": "number",
-	            "title": "Until Time"
+	        "exports": {
+	          "properties": {
+	            "id": {
+	              "type": "string",
+	              "title": "Photo ID"
+	            },
+	            "backdated_time": {
+	              "type": "string",
+	              "title": "Photo backdated time"
+	            },
+	            "from": {
+	              "type": "string",
+	              "title": "Picture URL"
+	            },
+	            "height": {
+	              "type": "number",
+	              "title": "Height of this photo"
+	            },
+	            "link": {
+	              "type": "string",
+	              "title": "Link to photo"
+	            },
+	            "name": {
+	              "type": "string",
+	              "title": "User caption of the photo"
+	            },
+	            "updated_time": {
+	              "type": "string",
+	              "title": "Link Icon"
+	            },
+	            "width": {
+	              "type": "number",
+	              "title": "Width of this photo"
+	            }
 	          }
 	        },
+	        "imports": {
+	          "properties": {
+	            "since": {
+	              "type": "number",
+	              "title": "Since Time"
+	            },
+	            "until": {
+	              "type": "number",
+	              "title": "Until Time"
+	            }
+	          },
 	        "disposition": [
 	          "since",
 	          "until"

@@ -31,7 +31,7 @@ PostPagePhoto.prototype._postPhoto = function(channel, params, sysImports, next)
     client = this.pod.getClient(sysImports);
 
   client.api(
-  '/' + channel.config.page_id  +'/photos',
+  '/' + imports.page_id  +'/photos',
   'post',
   params,
   function (res) {
@@ -83,7 +83,7 @@ PostPagePhoto.prototype.invoke = function(imports, channel, sysImports, contentP
             var form = new FormData(); //Create multipart form
             form.append('source', stream); //Put file
 
-            requestUrl = '/' + channel.config.page_id + '/photos?access_token=' + params.access_token;
+            requestUrl = '/' + imports.page_id + '/photos?access_token=' + params.access_token;
 
             if (params.message) {
               requestUrl += '&message=' + encodeURIComponent(params.message);
