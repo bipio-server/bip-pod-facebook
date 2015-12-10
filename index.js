@@ -39,6 +39,10 @@ Facebook.initParams = function(sysImports) {
   return params;
 }
 
+Facebook.profileReprOAuth = function(profile) {
+  return profile.name;
+}
+
 Facebook.getClient = function() {
   return FB;
 }
